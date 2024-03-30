@@ -2,14 +2,14 @@
 const { episodes } = Astro.props;
 ---
 
-<div class="sticky bottom-9 justify-end flex mr-1 has-tooltip">
+<div class="sticky bottom-9 justify-end flex mx-3 has-tooltip pointer-events-none">
     <div class="" data-tip="Random unwatched episode">
         <span
             class="tooltip rounded shadow-lg p-1 bg-gray-700 text-white px-3 text-xs -translate-y-full max-w-28 -mt-1 text-center"
             >A random unwatched episode</span
         >
         <button
-            class="border rounded-lg bg-orange-500 hover:bg-orange-600 w-20 h-20 border-gray-900"
+            class="border rounded-lg bg-orange-500 hover:bg-orange-600 w-20 h-20 border-gray-900 pointer-events-auto"
             id="randombutton"
             ><span class="material-symbols-outlined"> shuffle </span></button
         >
