@@ -16,22 +16,28 @@ const { episodes } = Astro.props;
     </div>
 </div>
 
-<script define:vars={{ episodes }}>
+<script>
     let randombutton = document.getElementById("randombutton");
-    let modal;
+    let modalbutton = document.querySelector("#modalbutton");
+    let modal = document.querySelector("#randommodal") as HTMLDialogElement;
+    
 
     function updateModal() {
+        let db = localStorage.getItem("simpsons-db")
+		if (!db) throw Error("Error: No database found.");
+		let dbjson = JSON.parse(db) as Array<any>
+		const allEpisodes = dbjson.flat()
+        const unseenEpisodes = allEpisodes.filter((ep) => ep.seen == false)
         let randomepisode =
-            episodes[Math.floor(Math.random() * episodes.length)];
+            unseenEpisodes[Math.floor(Math.random() * unseenEpisodes.length)];
         let modaltitle = modal.querySelector("#modaltitle");
         let modaldescription = modal.querySelector("#modaldescription");
+        let modalepisode = modal.querySelector("#modalepisode");
         modaltitle.innerHTML = randomepisode.title;
         modaldescription.innerHTML = randomepisode.description;
         modalepisode.innerHTML = `${randomepisode.episode}x${randomepisode.season}`;
     }
 
-    modal = document.querySelector("#randommodal");
-    modalbutton = document.querySelector("#modalbutton");
     randombutton.addEventListener("click", () => {
         updateModal();
         modal.showModal();
