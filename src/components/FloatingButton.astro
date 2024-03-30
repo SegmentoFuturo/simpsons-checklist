@@ -1,0 +1,42 @@
+---
+const { episodes } = Astro.props;
+---
+
+<div class="sticky bottom-9 justify-end flex mx-5 has-tooltip">
+    <div class="" data-tip="Random unwatched episode">
+        <span
+            class="tooltip rounded shadow-lg p-1 bg-gray-700 text-white px-3 text-xs -translate-y-full max-w-28 -mt-1 text-center"
+            >A random unwatched episode</span
+        >
+        <button
+            class="border rounded-lg bg-orange-500 hover:bg-orange-600 w-20 h-20 border-gray-900"
+            id="randombutton"
+            ><span class="material-symbols-outlined"> shuffle </span></button
+        >
+    </div>
+</div>
+
+<script define:vars={{ episodes }}>
+    let randombutton = document.getElementById("randombutton");
+    let modal;
+
+    function updateModal() {
+        let randomepisode =
+            episodes[Math.floor(Math.random() * episodes.length)];
+        let modaltitle = modal.querySelector("#modaltitle");
+        let modaldescription = modal.querySelector("#modaldescription");
+        modaltitle.innerHTML = randomepisode.title;
+        modaldescription.innerHTML = randomepisode.description;
+        modalepisode.innerHTML = `${randomepisode.episode}x${randomepisode.season}`;
+    }
+
+    modal = document.querySelector("#randommodal");
+    modalbutton = document.querySelector("#modalbutton");
+    randombutton.addEventListener("click", () => {
+        updateModal();
+        modal.showModal();
+    });
+    modalbutton.addEventListener("click", () => {
+        updateModal();
+    });
+</script>
