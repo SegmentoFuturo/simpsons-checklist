@@ -1,5 +1,4 @@
 ---
-import Dialog from "../components/Dialog.astro"
 import ProgressBar from "../components/ProgressBar.astro";
 import FloatingButton from "../components/FloatingButton.astro";
 import Footer from "../components/Footer.astro"
@@ -33,7 +32,7 @@ for (const ep of data.seasons) {
 	<body class="bg-[#ffc107]">
 		<dialog
 			id="randommodal"
-			class="bg-yellow-500 text-sm max-w-lg p-14 border border-gray-900 border-1"
+			class="bg-yellow-500 text-sm max-w-lg border p-8 lg:p-14 border-gray-900 border-1 mx-3 lg:m-auto"
 		>
 			<h3 class="font-bold text-lg" id="modaltitle">Title</h3>
 			<p id="modalepisode">Season</p>
@@ -41,7 +40,7 @@ for (const ep of data.seasons) {
 			<div class="mt-4 flex justify-end">
 				<button
 					id="modalbutton"
-					class="bg-orange-500 w-auto px-3 h-10 rounded-md border-solid border m-1 border-gray-900 hover:bg-orange-500"
+					class="bg-orange-500 w-auto px-3 h-10 rounded-md border-solid border m-1  border-gray-900 hover:bg-orange-500"
 					>Next random</button
 				>
 				<form method="dialog">
@@ -123,6 +122,11 @@ for (const ep of data.seasons) {
 	.has-tooltip:hover .tooltip {
 		@apply visible z-50;
 	}
+
+	dialog::backdrop {
+  		background-color: black;
+  		opacity: 0.55;
+}
 </style>
 
 <script>
