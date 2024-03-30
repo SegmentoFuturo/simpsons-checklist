@@ -2,6 +2,7 @@
 import Dialog from "../components/Dialog.astro"
 import ProgressBar from "../components/ProgressBar.astro";
 import FloatingButton from "../components/FloatingButton.astro";
+import Footer from "../components/Footer.astro"
 
 import data from "../assets/formatted_simpsons_data.json";
 import rawdata from "../assets/simpsons_data.json";
@@ -24,6 +25,7 @@ for (const ep of data.seasons) {
 			rel="stylesheet"
 			href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
 		/>
+
 		<title>Simpsons checklist</title>
 	</head>
 
@@ -80,6 +82,7 @@ for (const ep of data.seasons) {
 			</div> 
 
 			<FloatingButton episodes={rawdata.episodes}/>
+			<Footer />
 		</div>
 	</body>
 </html>
