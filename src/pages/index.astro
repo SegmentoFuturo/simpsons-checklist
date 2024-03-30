@@ -11,8 +11,9 @@ import { Image } from "astro:assets";
 import jesus from "../assets/jesus.gif";
 
 for (const ep of data.seasons) {
-	ep["seen"] = false;
+	ep["seen"] = true;
 }
+
 ---
 
 <html lang="en">
@@ -30,8 +31,29 @@ for (const ep of data.seasons) {
 	</head>
 
 	<body class="bg-[#ffc107]">
+		<dialog
+			id="randommodal"
+			class="bg-yellow-500 text-sm max-w-lg p-14 border border-gray-900 border-1"
+		>
+			<h3 class="font-bold text-lg" id="modaltitle">Title</h3>
+			<p id="modalepisode">Season</p>
+			<p class="py-4" id="modaldescription">Description</p>
+			<div class="mt-4">
+				<button
+					id="modalbutton"
+					class="bg-orange-400 w-auto px-3 h-10 rounded-md border-solid border m-1 border-gray-900 hover:bg-orange-500"
+					>Next random</button
+				>
+				<form method="dialog">
+					<!-- if there is a button in form, it will close the modal -->
+					<button
+						class="bg-transparent w-auto px-3 h-10 rounded-md border-solid border m-1 border-gray-900 hover:bg-amber-500"
+						>Close</button
+					>
+				</form>
+			</div>
+		</dialog>
 
-<Dialog />
 		<div class="p-10 lg:20 w-screen">
 			<div class="flex">
 				<div class="mb-10 flex-col flex items-center text-center lg:text-left lg:items-start lg:flex-row">
@@ -51,7 +73,7 @@ for (const ep of data.seasons) {
 
 			<ProgressBar />
 
-			<div class="justify-start">
+			<div id="mainlist" data-seasons={JSON.stringify(data.seasons)} class="justify-start">
 				{
 					data.seasons.map((season) => (
 						<>
@@ -62,7 +84,7 @@ for (const ep of data.seasons) {
 							</div>
 							<div class="mb-6 mt-2 flex-wrap flex justify-start text-sm">
 								{season.map((episode) => (
-									<div class="has-tooltip flex justify-center">
+									<div  id=`${episode.season}x${episode.episode}` class="has-tooltip flex justify-center">
 										<span class="tooltip rounded shadow-lg p-1 bg-gray-800 text-white px-3 text-xs -translate-y-full max-w-28 -mt-1 text-center">
 											<span class=" font-bold">
 												{episode.title} <br />
@@ -71,7 +93,7 @@ for (const ep of data.seasons) {
 										</span>
 
 										<button class="bg-orange-400 w-10 h-10 rounded-sm border-solid border m-1 border-gray-900 hover:bg-orange-500">
-											<a href="">{episode.episode}</a>{" "}
+											{episode.episode}
 										</button>
 									</div>
 								))}
@@ -80,7 +102,6 @@ for (const ep of data.seasons) {
 					))
 				}
 			</div> 
-
 			<FloatingButton episodes={rawdata.episodes}/>
 			<Footer />
 		</div>
@@ -103,3 +124,69 @@ for (const ep of data.seasons) {
 		@apply visible z-50;
 	}
 </style>
+
+<script>
+	let db = localStorage.getItem("simpsons-db")
+	if (db) {
+		console.log("Database Found")
+		console.log(JSON.parse(db))
+	} else {
+		console.log("Database Not Found")
+		localStorage.setItem("simpsons-db", document.getElementById("mainlist").dataset.seasons)
+	}
+	setButtonsCallbacks()
+	updateButtons()
+	updateProgressBar()
+
+	function updateProgressBar() {
+		let db = localStorage.getItem("simpsons-db")
+		if (!db) throw Error("Error: No database found.");
+		let dbjson = JSON.parse(db) as Array<any>
+		let progressbar = document.getElementById("progressbar")
+		let progressbarlabel = document.getElementById("progressbar-label")
+		const allEpisodes = dbjson.flat()
+		const perc = (allEpisodes.filter(e => e.seen == true).length / allEpisodes.length * 100)
+		progressbarlabel.innerHTML = `${perc.toPrecision(3)}%`;
+		progressbar.style.width = `${perc.toPrecision(1)}%`
+	}
+
+	function setButtonsCallbacks() {
+		let db = localStorage.getItem("simpsons-db")
+		if (!db) throw Error("Error: No database found.");
+		let dbjson = JSON.parse(db)
+		dbjson.forEach(season => {
+			season.forEach(episode => {
+				let episodediv = document.getElementById(`${episode.season}x${episode.episode}`)
+				let episodebutton = episodediv.querySelector("button")
+				episodebutton.addEventListener("click", () => {
+					dbjson[episode.season - 1][episode.episode - 1].seen = !dbjson[episode.season - 1][episode.episode - 1].seen 
+					db = JSON.stringify(dbjson)
+					localStorage.setItem("simpsons-db", db)
+					
+					updateButtons()
+					updateProgressBar()
+
+				})
+			})
+		});
+	}
+
+	function updateButtons() {
+		let db = localStorage.getItem("simpsons-db")
+		if (!db) throw Error("Error: No database found.");
+		let dbjson = JSON.parse(db)
+		dbjson.forEach(season => {
+			season.forEach(episode => {
+				let episodediv = document.getElementById(`${episode.season}x${episode.episode}`)
+				let episodebutton = episodediv.querySelector("button")
+				if (episode.seen) {
+					episodebutton.classList.remove("bg-orange-400")
+					episodebutton.classList.add("bg-green-600")
+				} else {
+					episodebutton.classList.add("bg-orange-400")
+					episodebutton.classList.remove("bg-green-600")
+				}
+			})
+		});
+	}
+</script>
