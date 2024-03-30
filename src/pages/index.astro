@@ -1,5 +1,5 @@
 ---
-import Dialog from "../components/Dialog.astro";
+import Dialog from "../components/Dialog.astro"
 import ProgressBar from "../components/ProgressBar.astro";
 import FloatingButton from "../components/FloatingButton.astro";
 
@@ -28,15 +28,16 @@ for (const ep of data.seasons) {
 	</head>
 
 	<body class="bg-[#ffc107]">
-		<Dialog />
+
+<Dialog />
 		<div class="p-10 lg:20 w-screen">
-			<div class="flex justify-between">
-				<div class="mb-10 flex justify-start">
-					<div class="mr-2">
+			<div class="flex">
+				<div class="mb-10 flex-col flex items-center text-center lg:text-left lg:items-start lg:flex-row">
+					<div class="lg:mr-2">
 						<Image src={jesus} alt="Cheesus" class="max-w-16" />
 					</div>
 					<div>
-						<h1 class="text-xl lg:text-7xl mb-2 font-serif">
+						<h1 class="text-6xl lg:text-7xl mb-6 lg:mb-2 font-serif">
 							Simpson checklist
 						</h1>
 						<h5>
@@ -60,7 +61,7 @@ for (const ep of data.seasons) {
 							<div class="mb-6 mt-2 flex-wrap flex justify-start text-sm">
 								{season.map((episode) => (
 									<div class="has-tooltip flex justify-center">
-										<span class="tooltip rounded shadow-lg p-1 bg-gray-700 text-white px-3 text-xs -translate-y-full max-w-36 -mt-1 text-center">
+										<span class="tooltip rounded shadow-lg p-1 bg-gray-700 text-white px-3 text-xs -translate-y-full max-w-28 -mt-1 text-center">
 											<span class=" font-bold">
 												{episode.title} <br />
 											</span>
@@ -76,9 +77,9 @@ for (const ep of data.seasons) {
 						</>
 					))
 				}
-			</div>
+			</div> 
 
-			<FloatingButton episodes={rawdata.episodes} />
+			<FloatingButton episodes={rawdata.episodes}/>
 		</div>
 	</body>
 </html>
