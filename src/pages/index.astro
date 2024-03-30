@@ -1,4 +1,5 @@
 ---
+import Dialog from "../components/Dialog.astro";
 import ProgressBar from "../components/ProgressBar.astro";
 import FloatingButton from "../components/FloatingButton.astro";
 
@@ -27,27 +28,7 @@ for (const ep of data.seasons) {
 	</head>
 
 	<body class="bg-[#ffc107]">
-		<dialog id="randommodal" class="bg-yellow-500 text-sm max-w-lg p-14 border border-gray-900 border-1">
-				<h3 class="font-bold text-lg" id="modaltitle">Title</h3>
-				<p id="modalepisode">Season</p>
-				<p class="py-4" id="modaldescription">Description</p>
-				<div class="mt-4">
-					<button
-						id="modalbutton"
-						class="bg-orange-400 w-auto px-3 h-10 rounded-md border-solid border m-1 border-gray-900 hover:bg-orange-500"
-						>Next random</button
-					>
-					<form method="dialog">
-						<!-- if there is a button in form, it will close the modal -->
-						<button
-							class="bg-transparent w-auto px-3 h-10 rounded-md border-solid border m-1 border-gray-900 hover:bg-amber-500"
-							>Close</button
-						>
-					</form>
-				</div>
-
-		</dialog>
-
+		<Dialog />
 		<div class="p-10 lg:20 w-screen">
 			<div class="flex justify-between">
 				<div class="mb-10 flex justify-start">
@@ -95,9 +76,9 @@ for (const ep of data.seasons) {
 						</>
 					))
 				}
-			</div> 
+			</div>
 
-			<FloatingButton episodes={rawdata.episodes}/>
+			<FloatingButton episodes={rawdata.episodes} />
 		</div>
 	</body>
 </html>
