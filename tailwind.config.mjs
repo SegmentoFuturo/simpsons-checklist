@@ -7,6 +7,12 @@ export default {
 			fontFamily: {
 			  serif: ['SimpsonsFont', ...defaultTheme.fontFamily.sans],
 			},
+			colors: {
+				darkBlue: '#024975',
+				lightBlue: '#24cbeb',
+				yellow: '#fed81f',
+				orange: '#f57945'
+			}
 		  },
 	},
 	plugins: [],
