@@ -103,6 +103,11 @@ for (const ep of data.seasons) {
 			</div> 
 			<FloatingButton episodes={rawdata.episodes}/>
 			<Footer />
+			
+			<a href="" id="saveBackupA">Save Backup</a>
+			<label for="loadBackupInput"></label>
+			<input type="file" name="loadBackupInput" id="loadBackupInput">
+			<button type="button" id="loadBackupButton">Load Backup</button>
 		</div>
 	</body>
 </html>
@@ -141,35 +146,78 @@ for (const ep of data.seasons) {
 	setButtonsCallbacks()
 	updateButtons()
 	updateProgressBar()
+	updateBackupDB()
+	initLoadBackupDB()
+
+	// Functions
+
+	function initLoadBackupDB() {
+		let loadBackupInput = document.getElementById("loadBackupInput") as HTMLInputElement
+		let loadBackupButton = document.getElementById("loadBackupButton")
+		loadBackupButton.addEventListener("click", async () => {
+			let db = localStorage.getItem("simpsons-db")
+			if (db) {
+				localStorage.removeItem("simpsons-db")
+			}
+			const [file] = loadBackupInput.files
+			if (file) {
+				let text = await file.text()
+				console.log(text)
+				localStorage.setItem("simpsons-db", text)
+				updateButtons()
+				updateProgressBar()
+			}
+		});
+	}
+
+	function updateBackupDB() {
+		let db = localStorage.getItem("simpsons-db")
+		if (!db) throw Error("Error: No database found.")
+
+		// file setting
+		const text = db
+		const name = "simpsons_checklist.json"
+		const type = "text/plain"
+
+		// create file
+		const saveBackupAnchor = document.getElementById("saveBackupA") as HTMLAnchorElement;
+		saveBackupAnchor.innerText = "Save Backup"
+		const file = new Blob([text], { type: type })
+		saveBackupAnchor.href = URL.createObjectURL(file)
+		saveBackupAnchor.download = name
+	}
 
 	function updateProgressBar() {
 		let db = localStorage.getItem("simpsons-db")
-		if (!db) throw Error("Error: No database found.");
+		if (!db) throw Error("Error: No database found.")
 		let dbjson = JSON.parse(db) as Array<any>
 		let progressbar = document.getElementById("progressbar")
 		let progressbarlabel = document.getElementById("progressbar-label")
 		const allEpisodes = dbjson.flat()
 		const perc = (allEpisodes.filter(e => e.seen == true).length / allEpisodes.length * 100)
-		progressbarlabel.innerHTML = `${perc.toPrecision(3)}%`;
+		progressbarlabel.innerHTML = `${perc.toPrecision(3)}%`
 		progressbar.style.width = `${perc.toPrecision(1)}%`
 	}
 
 	function setButtonsCallbacks() {
 		let db = localStorage.getItem("simpsons-db")
-		if (!db) throw Error("Error: No database found.");
+		if (!db) throw Error("Error: No database found.")
 		let dbjson = JSON.parse(db)
 		dbjson.forEach(season => {
 			season.forEach(episode => {
 				let episodediv = document.getElementById(`${episode.season}x${episode.episode}`)
 				let episodebutton = episodediv.querySelector("button")
 				episodebutton.addEventListener("click", () => {
+					let db = localStorage.getItem("simpsons-db")
+					if (!db) throw Error("Error: No database found.")
+					let dbjson = JSON.parse(db)
 					dbjson[episode.season - 1][episode.episode - 1].seen = !dbjson[episode.season - 1][episode.episode - 1].seen 
 					db = JSON.stringify(dbjson)
 					localStorage.setItem("simpsons-db", db)
 					
 					updateButtons()
 					updateProgressBar()
-
+					updateBackupDB()
 				})
 			})
 		});
@@ -177,12 +225,13 @@ for (const ep of data.seasons) {
 
 	function updateButtons() {
 		let db = localStorage.getItem("simpsons-db")
-		if (!db) throw Error("Error: No database found.");
+		if (!db) throw Error("Error: No database found.")
 		let dbjson = JSON.parse(db)
 		dbjson.forEach(season => {
 			season.forEach(episode => {
 				let episodediv = document.getElementById(`${episode.season}x${episode.episode}`)
 				let episodebutton = episodediv.querySelector("button")
+				
 				if (episode.seen) {
 					episodebutton.classList.remove("bg-orange-400")
 					episodebutton.classList.add("bg-green-600")
