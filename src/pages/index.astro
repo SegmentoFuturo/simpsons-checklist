@@ -7,14 +7,14 @@ import data from "../assets/formatted_simpsons_data.json";
 import rawdata from "../assets/simpsons_data.json";
 
 import { Image } from "astro:assets";
-import jesus from "../assets/jesus.gif";
+import jesus from "../assets/jesusNoBg.gif";
 
 for (const ep of data.seasons) {
 	ep["seen"] = true;
 }
 ---
 
-<html lang="en">
+<html lang="en" class="bg-darkBlue">
 	<head>
 		<meta charset="utf-8" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -28,7 +28,7 @@ for (const ep of data.seasons) {
 		<title>Simpsons checklist</title>
 	</head>
 
-	<body class="bg-conic/[in_hsl_longer_hue] from-red-600 to-red-600">
+	<body class="bg-gradient-to-b from-[#024975] to-[#24cbeb]">
 		<dialog
 			id="randommodal"
 			class="bg-yellow-500 text-sm max-w-lg border p-8 lg:p-14 border-black/80 border-1 mx-3 lg:m-auto"
@@ -45,7 +45,7 @@ for (const ep of data.seasons) {
 				<form method="dialog">
 					<!-- if there is a button in form, it will close the modal -->
 					<button
-						class="bg-transparent w-auto px-3 h-10 rounded-md border-solid border m-1 border-black/80 "
+						class="bg-transparent hidden w-auto px-3 h-10 rounded-md border-solid border m-1 border-black/80"
 						>Close</button
 					>
 				</form>
@@ -62,18 +62,16 @@ for (const ep of data.seasons) {
 					</div>
 					<div>
 						<h1
-							class="text-6xl text-yellow lg:text-7xl mb-6 lg:mb-2 font-serif"
+							class="text-6xl text-yellow lg:text-7xl mb-6 lg:mb-2 font-serif [text-shadow:_0_4px_0px_rgba(0,0,0,1)]"
 						>
 							Simpson checklist
 						</h1>
-						<h5 class=" text-lg">
-							Take note of The Simpsons episodes you've watched.
+						<h5 class="uppercase text-lg font-second text-white">
+							Take note of The Simpsons episodes you've watched
 						</h5>
 					</div>
 				</div>
 			</div>
-
-
 
 			<div
 				id="mainlist"
@@ -82,44 +80,74 @@ for (const ep of data.seasons) {
 			>
 				<div class="flex flex-wrap gap-4 justify-center">
 					{
-						data.seasons.map((season) => (
-							<div class="bg-yellow w-56 h-10  m-2 border-[1px] border-black flex align-middle p-2" >
-								<h3>Season: {season[0].season}</h3>
+						data.seasons.map((season, idx) => (
+							<div id="" class="rounded-md pb-2 ">
+								<button  id=`hideButton${idx}` class="hideButtons text-sm bg-orange px-2 py-1 w-56 rounded-t-md justify-between  flex">
+									<h3 class=" font-serif bold my-auto  ">
+										Season: {season[0].season}
+									</h3>
+									<div class="flex gap-x-2">
+										<p class="my-auto">0/{season.length}</p>
+										<p class="md:hidden" >
+											close
+										</p>
+									</div>
+								</button>
+								<div class="block bg-yellow rounded-b-md" data-status="open" id=`episodesDiv${idx}`>
+									{season.map((episode) => (
+										<div class="flex flex-col gap-y-2 py-2 max-w-56 px-2">
+											<div class=" flex flex-row justify-between">
+												<div class="mr-2">
+													<h5 class=" my-auto text-xs font-bold text-wrap leading-[1.1em]">
+														<span class=" font-normal">{episode.episode} </span>{episode.title}
+													</h5>
+													<p class="text-[8pt] leading-[1em] max-w-48">
+														{episode.description}
+													</p>
+												</div>
+												<input
+													class="my-auto"
+													type="checkbox"
+													id="horns"
+													name="horns"
+												/>
+											</div>
+										</div>
+									))}
+								</div>
 							</div>
-
-
 						))
 					}
 				</div>
-				<!-- {
-					data.seasons.map((season) => (
-						<>
-							<div class="mt-16">
-								<h3 class=" font-bold ">
-									Season {season[0].season}
-								</h3>
-							</div>
-							<div class="mb-6 mt-2 flex-wrap flex justify-start text-sm">
-								{season.map((episode) => (
-									<div  id=`${episode.season}x${episode.episode}` class="has-tooltip flex justify-center">
-										<span class="tooltip rounded shadow-lg p-1 bg-gray-800 text-white px-3 text-xs -translate-y-full max-w-28 -mt-1 text-center">
-											<span class=" font-bold">
-												{episode.title} <br />
-											</span>
-											{episode.description}
-										</span>
+			// 	<!-- {
+			// 		data.seasons.map((season) => (
+			// 			<>
+			// 				<div class="mt-16">
+			// 					<h3 class=" font-bold ">
+			// 						Season {season[0].season}
+			// 					</h3>
+			// 				</div>
+			// 				<div class="mb-6 mt-2 flex-wrap flex justify-start text-sm ">
+			// 					{season.map((episode) => (
+			// 						<div  id=`${episode.season}x${episode.episode}` class="has-tooltip flex justify-center">
+			// 							<span class="tooltip rounded shadow-lg p-1 bg-gray-800 text-white px-3 text-xs -translate-y-full max-w-28 -mt-1 text-center">
+			// 								<span class=" font-bold">
+			// 									{episode.title} <br />
+			// 								</span>
+			// 								{episode.description}
+			// 							</span>
 
-										<button class="bg-yellow-400 w-10 h-10 rounded-sm border-solid border m-1 border-gray-900 hover:bg-yellow-500">
-											{episode.episode}
-										</button>
-									</div>
-								))}
-							</div>
-						</>
-					))
-				}
-			</div>  -->
-				<FloatingButton episodes={rawdata.episodes} />
+			// 							<button class="bg-yellow-400 w-10 h-10 rounded-sm border-solid border m-1 border-gray-900 hover:bg-yellow-500">
+			// 								{episode.episode}
+			// 							</button>
+			// 						</div>
+			// 					))}
+			// 				</div>
+			// 			</>
+			// 		))
+			// 	}
+			// </div>  -->
+				// <FloatingButton episodes={rawdata.episodes} />
 				<Footer />
 			</div>
 		</div>
@@ -129,6 +157,13 @@ for (const ep of data.seasons) {
 		@font-face {
 			font-family: "SimpsonsFont";
 			src: url("/fonts/simpsonsfont.woff") format("woff");
+			font-weight: normal;
+			font-style: normal;
+			font-display: swap;
+		}
+		@font-face {
+			font-family: "SimpsonsSecondaryFont";
+			src: url("/fonts/akbar.ttf") format("truetype");
 			font-weight: normal;
 			font-style: normal;
 			font-display: swap;
@@ -159,9 +194,32 @@ for (const ep of data.seasons) {
 				document.getElementById("mainlist").dataset.seasons,
 			);
 		}
-		setButtonsCallbacks();
-		updateButtons();
-		updateProgressBar();
+		// setButtonsCallbacks();
+		// updateButtons();
+		// updateProgressBar();
+
+		const hideButtons = document.getElementsByClassName("hideButtons");
+
+		for (let index = 0; index < hideButtons.length; index++) {
+			const element = hideButtons.namedItem(`hideButton${index}`);
+			element.addEventListener("click", (ev) => {
+				const episodesDiv = document.getElementById(`episodesDiv${index}`);
+				if (episodesDiv.dataset["status"] == "open") {
+					episodesDiv.classList.add( "h-2", "overflow-hidden");
+					episodesDiv.classList.remove( "h-max");
+					episodesDiv.dataset["status"] = "closed"
+					console.log("closed")
+				}
+				else if (episodesDiv.dataset["status"] == "closed") {
+					episodesDiv.classList.add( "h-max");
+					episodesDiv.classList.remove("h-2", "overflow-hidden");
+					episodesDiv.dataset["status"] = "open"
+					
+					console.log("open")
+				}
+
+			});
+		}
 
 		function updateProgressBar() {
 			let db = localStorage.getItem("simpsons-db");
@@ -178,49 +236,49 @@ for (const ep of data.seasons) {
 			progressbar.style.width = `${perc.toPrecision(1)}%`;
 		}
 
-		function setButtonsCallbacks() {
-			let db = localStorage.getItem("simpsons-db");
-			if (!db) throw Error("Error: No database found.");
-			let dbjson = JSON.parse(db);
-			dbjson.forEach((season) => {
-				season.forEach((episode) => {
-					let episodediv = document.getElementById(
-						`${episode.season}x${episode.episode}`,
-					);
-					let episodebutton = episodediv.querySelector("button");
-					episodebutton.addEventListener("click", () => {
-						dbjson[episode.season - 1][episode.episode - 1].seen =
-							!dbjson[episode.season - 1][episode.episode - 1]
-								.seen;
-						db = JSON.stringify(dbjson);
-						localStorage.setItem("simpsons-db", db);
+		// function setButtonsCallbacks() {
+		// 	let db = localStorage.getItem("simpsons-db");
+		// 	if (!db) throw Error("Error: No database found.");
+		// 	let dbjson = JSON.parse(db);
+		// 	dbjson.forEach((season) => {
+		// 		season.forEach((episode) => {
+		// 			let episodediv = document.getElementById(
+		// 				`${episode.season}x${episode.episode}`,
+		// 			);
+		// 			let episodebutton = episodediv.querySelector("button");
+		// 			episodebutton.addEventListener("click", () => {
+		// 				dbjson[episode.season - 1][episode.episode - 1].seen =
+		// 					!dbjson[episode.season - 1][episode.episode - 1]
+		// 						.seen;
+		// 				db = JSON.stringify(dbjson);
+		// 				localStorage.setItem("simpsons-db", db);
 
-						updateButtons();
-						updateProgressBar();
-					});
-				});
-			});
-		}
+		// 				updateButtons();
+		// 				updateProgressBar();
+		// 			});
+		// 		});
+		// 	});
+		// }
 
-		function updateButtons() {
-			let db = localStorage.getItem("simpsons-db");
-			if (!db) throw Error("Error: No database found.");
-			let dbjson = JSON.parse(db);
-			dbjson.forEach((season) => {
-				season.forEach((episode) => {
-					let episodediv = document.getElementById(
-						`${episode.season}x${episode.episode}`,
-					);
-					let episodebutton = episodediv.querySelector("button");
-					if (episode.seen) {
-						episodebutton.classList.remove("bg-yellow-400");
-						episodebutton.classList.add("bg-green-600");
-					} else {
-						episodebutton.classList.add("bg-yellow-400");
-						episodebutton.classList.remove("bg-green-600");
-					}
-				});
-			});
-		}
+		// function updateButtons() {
+		// 	let db = localStorage.getItem("simpsons-db");
+		// 	if (!db) throw Error("Error: No database found.");
+		// 	let dbjson = JSON.parse(db);
+		// 	dbjson.forEach((season) => {
+		// 		season.forEach((episode) => {
+		// 			let episodediv = document.getElementById(
+		// 				`${episode.season}x${episode.episode}`,
+		// 			);
+		// 			let episodebutton = episodediv.querySelector("button");
+		// 			if (episode.seen) {
+		// 				episodebutton.classList.remove("bg-yellow-400");
+		// 				episodebutton.classList.add("bg-green-600");
+		// 			} else {
+		// 				episodebutton.classList.add("bg-yellow-400");
+		// 				episodebutton.classList.remove("bg-green-600");
+		// 			}
+		// 		});
+		// 	});
+		// }
 	</script>
 </html>
